@@ -33,7 +33,7 @@ namespace Library.API
             // appSettings (note: use this during development; in a production environment,
             // it's better to store the connection string in an environment variable)
             var connectionString = Configuration["connectionStrings:libraryDBConnectionString"];
-            services.AddDbContext<LibraryContext>(o => o.UseSqlServer(connectionString));
+            services.AddDbContext<LibraryContext>(o => o.UseSqlServer("Data Source=.; Initial Catalog=LibraryDB; User Id=sa; Password=lillyr055y; Persist Security Info=True"));
 
             // register the repository
             services.AddScoped<ILibraryRepository, LibraryRepository>();
