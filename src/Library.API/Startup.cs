@@ -65,6 +65,7 @@ namespace Library.API
                     .ForMember (dest => dest.Age, opt => opt.MapFrom (src =>
                         src.DateOfBirth.GetCurrentAge ()
                     ));
+                x.CreateMap<Book, BookDto>();
             });
 
             app.UseMvc ();
