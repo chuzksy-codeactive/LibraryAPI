@@ -63,6 +63,7 @@ namespace Library.API
 
             AutoMapper.Mapper.Initialize (x =>
             {
+                // Outputs (Gets)
                 x.CreateMap<Author, AuthorDto> ()
                     .ForMember (dest => dest.Name, opt => opt.MapFrom (src =>
                         $"{src.FirstName} {src.LastName}"
@@ -71,6 +72,10 @@ namespace Library.API
                         src.DateOfBirth.GetCurrentAge ()
                     ));
                 x.CreateMap<Book, BookDto>();
+
+                // Inputs (Posts)
+                x.CreateMap<AuthorForCreationDto, Author>();
+                x.CreateMap<BookForCreationDto, Book>();
             });
 
             app.UseMvc ();
