@@ -72,8 +72,36 @@ namespace Library.API.Controllers
             {
                 throw new Exception ($"Creating a book for author {authorId} failed on save");
             }
-            var bookToReturn = Mapper.Map<BookDto>(bookEntity);
-            return CreatedAtRoute ("GetBookForAuthor", new { authorId = bookToReturn.AuthorId, id = bookToReturn.Id }, bookToReturn);
+            var bookToReturn = Mapper.Map<BookDto> (bookEntity);
+            return CreatedAtRoute ("GetBookForAuthor", new
+            {
+                authorId = bookToReturn.AuthorId, id = bookToReturn.Id
+            }, bookToReturn);
+        }
+
+        [HttpDelete ("{id}")]
+        public IActionResult DeleteBookForAuthor (Guid authorId, Guid id)
+        {
+            if (!_libraryRepo.AuthorExists (authorId))
+            {
+                return NotFound ();
+            }
+
+            var bookForAuthorFromRepo = _libraryRepo.GetBookForAuthor (authorId, id);
+
+            if (bookForAuthorFromRepo == null)
+            {
+                return NotFound ();
+            }
+
+            _libraryRepo.DeleteBook (bookForAuthorFromRepo);
+
+            if (!_libraryRepo.Save ())
+            {
+                throw new Exception ($"Deleting book {id} for author {authorId} failed on save");
+            }
+
+            return NoContent();
         }
     }
 }

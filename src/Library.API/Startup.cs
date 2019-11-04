@@ -30,10 +30,11 @@ namespace Library.API
         // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices (IServiceCollection services)
         {
-            services.AddMvc (setupAction => 
+            services.AddMvc (setupAction =>
             {
                 setupAction.ReturnHttpNotAcceptable = true;
-                setupAction.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+                setupAction.OutputFormatters.Add (new XmlDataContractSerializerOutputFormatter ());
+                setupAction.InputFormatters.Add (new XmlDataContractSerializerInputFormatter ());
             });
 
             // register the DbContext on the container, getting the connection string from
@@ -71,11 +72,11 @@ namespace Library.API
                     .ForMember (dest => dest.Age, opt => opt.MapFrom (src =>
                         src.DateOfBirth.GetCurrentAge ()
                     ));
-                x.CreateMap<Book, BookDto>();
+                x.CreateMap<Book, BookDto> ();
 
                 // Inputs (Posts)
-                x.CreateMap<AuthorForCreationDto, Author>();
-                x.CreateMap<BookForCreationDto, Book>();
+                x.CreateMap<AuthorForCreationDto, Author> ();
+                x.CreateMap<BookForCreationDto, Book> ();
             });
 
             app.UseMvc ();
