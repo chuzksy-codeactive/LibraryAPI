@@ -1,16 +1,21 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Library.API.Models
 {
-    public class BookForUpdateDto
+    public class BookForUpdateDto : BookForManipulationDto
     {
-        public string Title
+        [Required (ErrorMessage = "You should fill out a description.")]
+        public override string Description
         {
-            get;
-            set;
-        }
-        public string Description
-        {
-            get;
-            set;
+            get
+            {
+                return base.Description;
+            }
+
+            set
+            {
+                base.Description = value;
+            }
         }
     }
 }
