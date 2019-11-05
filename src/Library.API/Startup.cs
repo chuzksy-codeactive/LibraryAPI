@@ -77,6 +77,7 @@ namespace Library.API
                 // Inputs (Posts)
                 x.CreateMap<AuthorForCreationDto, Author> ();
                 x.CreateMap<BookForCreationDto, Book> ();
+                x.CreateMap<BookForUpdateDto, Book> ();
             });
 
             app.UseMvc ();

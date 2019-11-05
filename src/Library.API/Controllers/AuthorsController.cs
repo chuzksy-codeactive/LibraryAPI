@@ -40,23 +40,46 @@ namespace Library.API.Controllers
         }
 
         [HttpPost ()]
-        public IActionResult CreateAuthor([FromBody] AuthorForCreationDto author)
+        public IActionResult CreateAuthor ([FromBody] AuthorForCreationDto author)
         {
             if (author == null)
             {
-                return BadRequest();
+                return BadRequest ();
             }
 
-            var authorEntity = Mapper.Map<Author>(author);
-            _libraryRepo.AddAuthor(authorEntity);
+            var authorEntity = Mapper.Map<Author> (author);
+            _libraryRepo.AddAuthor (authorEntity);
 
-            if (!_libraryRepo.Save())
+            if (!_libraryRepo.Save ())
             {
-                throw new Exception("Creating an Author failed on save");
+                throw new Exception ("Creating an Author failed on save");
             }
-            
-            var authorToReturn = Mapper.Map<AuthorDto>(authorEntity);
-            return CreatedAtRoute ("GetAuthor", new { id = authorToReturn.Id}, authorToReturn);
+
+            var authorToReturn = Mapper.Map<AuthorDto> (authorEntity);
+            return CreatedAtRoute ("GetAuthor", new
+            {
+                id = authorToReturn.Id
+            }, authorToReturn);
+        }
+
+        [HttpDelete ("{id}")]
+        public IActionResult DeleteAuthor (Guid id)
+        {
+            var authorFromRepo = _libraryRepo.GetAuthor (id);
+
+            if (authorFromRepo == null)
+            {
+                return NotFound ();
+            }
+
+            _libraryRepo.DeleteAuthor (authorFromRepo);
+
+            if (!_libraryRepo.Save ())
+            {
+                throw new Exception ($"Deleting author {id} failed on save");
+            }
+
+            return NoContent ();
         }
     }
 }
