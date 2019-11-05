@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using AutoMapper;
 using Library.API.Entities;
+using Library.API.Helpers;
 using Library.API.Models;
 using Library.API.Services;
 using Microsoft.AspNetCore.JsonPatch;
@@ -61,9 +62,21 @@ namespace Library.API.Controllers
                 return BadRequest ();
             }
 
+            if (book.Description == book.Title)
+            {
+                ModelState.AddModelError (nameof (BookForCreationDto),
+                    "The provided description should be different from the title.");
+            }
+
             if (!_libraryRepo.AuthorExists (authorId))
             {
                 return NotFound ();
+            }
+
+            if (!ModelState.IsValid)
+            {
+                // return 422
+                return new UnprocessableEntityObjectResult (ModelState);
             }
 
             var bookEntity = Mapper.Map<Book> (book);
@@ -168,7 +181,25 @@ namespace Library.API.Controllers
 
             if (bookForAuthorFromRepo == null)
             {
-                return NotFound ();
+                var bookDto = new BookForUpdateDto ();
+                pathDoc.ApplyTo (bookDto);
+
+                var bookToAdd = Mapper.Map<Book> (bookDto);
+                bookToAdd.Id = id;
+
+                _libraryRepo.AddBookForAuthor (authorId, bookToAdd);
+
+                if (!_libraryRepo.Save ())
+                {
+                    throw new Exception ($"Upserting book {id} for author {authorId} failed on save");
+                }
+
+                var bookToReturn = Mapper.Map<BookDto> (bookToAdd);
+
+                return CreatedAtRoute ("GetBookForAuthor", new
+                {
+                    authorId = authorId, id = bookToReturn.Id
+                }, bookToReturn);
             }
 
             var bookToPath = Mapper.Map<BookForUpdateDto> (bookForAuthorFromRepo);
