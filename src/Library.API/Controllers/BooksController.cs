@@ -4,6 +4,7 @@ using AutoMapper;
 using Library.API.Entities;
 using Library.API.Models;
 using Library.API.Services;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Library.API.Controllers
@@ -121,18 +122,21 @@ namespace Library.API.Controllers
 
             if (bookForAuthorFromRepo == null)
             {
-                var bookToAdd = Mapper.Map<Book>(book);
+                var bookToAdd = Mapper.Map<Book> (book);
                 bookToAdd.Id = id;
 
-                _libraryRepo.AddBookForAuthor(authorId, bookToAdd);
+                _libraryRepo.AddBookForAuthor (authorId, bookToAdd);
 
-                if(!_libraryRepo.Save())
+                if (!_libraryRepo.Save ())
                 {
-                    throw new Exception($"Creating book {bookToAdd.Id} for author {authorId} failed on save");
+                    throw new Exception ($"Creating book {bookToAdd.Id} for author {authorId} failed on save");
                 }
 
-                var bookToReturn = Mapper.Map<BookDto>(bookToAdd);
-                return CreatedAtRoute("GetBookForAuthor", new { authorId = authorId, id = bookToReturn.Id }, bookToReturn);
+                var bookToReturn = Mapper.Map<BookDto> (bookToAdd);
+                return CreatedAtRoute ("GetBookForAuthor", new
+                {
+                    authorId = authorId, id = bookToReturn.Id
+                }, bookToReturn);
             }
 
             Mapper.Map (book, bookForAuthorFromRepo);
@@ -142,6 +146,41 @@ namespace Library.API.Controllers
             if (!_libraryRepo.Save ())
             {
                 throw new Exception ($"Updating book {id} for author {authorId} failed on save");
+            }
+
+            return NoContent ();
+        }
+
+        [HttpPatch ("{id}")]
+        public IActionResult PartiallyUpdateBookForAuthor (Guid authorId, Guid id, [FromBody] JsonPatchDocument<BookForUpdateDto> pathDoc)
+        {
+            if (pathDoc == null)
+            {
+                return BadRequest ();
+            }
+
+            if (!_libraryRepo.AuthorExists (authorId))
+            {
+                return NotFound ();
+            }
+
+            var bookForAuthorFromRepo = _libraryRepo.GetBookForAuthor (authorId, id);
+
+            if (bookForAuthorFromRepo == null)
+            {
+                return NotFound ();
+            }
+
+            var bookToPath = Mapper.Map<BookForUpdateDto> (bookForAuthorFromRepo);
+            pathDoc.ApplyTo (bookToPath);
+
+            // add validation
+            Mapper.Map (bookToPath, bookForAuthorFromRepo);
+            _libraryRepo.UpdateBookForAuthor (bookForAuthorFromRepo);
+
+            if (!_libraryRepo.Save ())
+            {
+                throw new Exception ($"Pathing book {id} for author {authorId} failed on save");
             }
 
             return NoContent ();
