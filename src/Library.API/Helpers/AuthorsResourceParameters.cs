@@ -35,6 +35,10 @@ namespace Library.API.Helpers
             get;
             set;
         } = "Name";
-
+        public string Fields
+        {
+            get;
+            set;
+        }
     }
 }
