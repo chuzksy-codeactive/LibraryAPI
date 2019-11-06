@@ -14,16 +14,22 @@ namespace Library.API.Controllers
     {
         private readonly ILibraryRepository _libraryRepo;
         private readonly IUrlHelper _urlHelper;
+        private readonly IPropertyMappingService _propertyMappingService;
 
-        public AuthorsController (ILibraryRepository libraryRepo, IUrlHelper urlHelper)
+        public AuthorsController (ILibraryRepository libraryRepo, IUrlHelper urlHelper, IPropertyMappingService propertyMappingService)
         {
             _libraryRepo = libraryRepo;
             _urlHelper = urlHelper;
+            _propertyMappingService = propertyMappingService;
         }
 
         [HttpGet (Name = "GetAuthors")]
         public IActionResult GetAuthors (AuthorsResourceParameters authorsResourceParameters)
         {
+            if (!_propertyMappingService.ValidMappingExistsFor<AuthorDto, Author>(authorsResourceParameters.OrderBy))
+            {
+                return BadRequest();
+            }
             var authorsFromRepo = _libraryRepo.GetAuthors (authorsResourceParameters);
 
             var previousPageLink = authorsFromRepo.HasPrevious ?
@@ -33,7 +39,7 @@ namespace Library.API.Controllers
             var nextPageLink = authorsFromRepo.HasNext ?
                 CreateAuthorsResourceUri (authorsResourceParameters,
                     ResourceUriType.NextPage) : null;
-            
+
             var paginationMetadata = new
             {
                 totalCount = authorsFromRepo.TotalCount,
@@ -44,7 +50,7 @@ namespace Library.API.Controllers
                 nextPageLink = nextPageLink
             };
 
-            Response.Headers.Add("X-Pagination", Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));
+            Response.Headers.Add ("X-Pagination", Newtonsoft.Json.JsonConvert.SerializeObject (paginationMetadata));
 
             var authors = Mapper.Map<IEnumerable<AuthorDto>> (authorsFromRepo);
 
