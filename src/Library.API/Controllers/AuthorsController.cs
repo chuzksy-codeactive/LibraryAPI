@@ -13,19 +13,77 @@ namespace Library.API.Controllers
     public class AuthorsController : Controller
     {
         private readonly ILibraryRepository _libraryRepo;
+        private readonly IUrlHelper _urlHelper;
 
-        public AuthorsController (ILibraryRepository libraryRepo)
+        public AuthorsController (ILibraryRepository libraryRepo, IUrlHelper urlHelper)
         {
             _libraryRepo = libraryRepo;
+            _urlHelper = urlHelper;
         }
 
-        [HttpGet ()]
+        [HttpGet (Name = "GetAuthors")]
         public IActionResult GetAuthors (AuthorsResourceParameters authorsResourceParameters)
         {
             var authorsFromRepo = _libraryRepo.GetAuthors (authorsResourceParameters);
+
+            var previousPageLink = authorsFromRepo.HasPrevious ?
+                CreateAuthorsResourceUri (authorsResourceParameters,
+                    ResourceUriType.PreviousPage) : null;
+
+            var nextPageLink = authorsFromRepo.HasNext ?
+                CreateAuthorsResourceUri (authorsResourceParameters,
+                    ResourceUriType.NextPage) : null;
+            
+            var paginationMetadata = new
+            {
+                totalCount = authorsFromRepo.TotalCount,
+                pageSize = authorsFromRepo.PageSize,
+                currentPage = authorsFromRepo.CurrentPage,
+                totalPages = authorsFromRepo.TotalPages,
+                previousPageLink = previousPageLink,
+                nextPageLink = nextPageLink
+            };
+
+            Response.Headers.Add("X-Pagination", Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));
+
             var authors = Mapper.Map<IEnumerable<AuthorDto>> (authorsFromRepo);
 
             return Ok (authors);
+        }
+
+        private string CreateAuthorsResourceUri (AuthorsResourceParameters authorsResourceParameters, ResourceUriType type)
+        {
+            switch (type)
+            {
+                case ResourceUriType.PreviousPage:
+                    return _urlHelper.Link ("GetAuthors",
+                        new
+                        {
+                            searchQuery = authorsResourceParameters.SearchQuery,
+                            genre = authorsResourceParameters.Genre,
+                            pageNumber = authorsResourceParameters.PageNumber - 1,
+                            pageSize = authorsResourceParameters.PageSize
+                        });
+                case ResourceUriType.NextPage:
+                    return _urlHelper.Link ("GetAuthors",
+                        new
+                        {
+                            searchQuery = authorsResourceParameters.SearchQuery,
+                            genre = authorsResourceParameters.Genre,
+                            pageNumber = authorsResourceParameters.PageNumber + 1,
+                            pageSize = authorsResourceParameters.PageSize
+                        });
+
+                default:
+                    return _urlHelper.Link ("GetAuthors",
+                        new
+                        {
+                            searchQuery = authorsResourceParameters.SearchQuery,
+                            genre = authorsResourceParameters.Genre,
+                            pageNumber = authorsResourceParameters.PageNumber,
+                            pageSize = authorsResourceParameters.PageSize
+                        });
+            }
         }
 
         [HttpGet ("{id}", Name = "GetAuthor")]
