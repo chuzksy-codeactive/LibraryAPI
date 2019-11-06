@@ -26,6 +26,7 @@
         "dependencies": {
           "AutoMapper": "5.2.0",
           "Microsoft.AspNetCore.All": "2.0.0",
+          "Microsoft.Extensions.Logging.Debug": "2.0.0",
           "Microsoft.NETCore.App": "2.0.0"
         },
         "runtime": {

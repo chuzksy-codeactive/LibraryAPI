@@ -20,9 +20,9 @@ namespace Library.API.Controllers
         }
 
         [HttpGet ()]
-        public IActionResult GetAuthors ()
+        public IActionResult GetAuthors (AuthorsResourceParameters authorsResourceParameters)
         {
-            var authorsFromRepo = _libraryRepo.GetAuthors ();
+            var authorsFromRepo = _libraryRepo.GetAuthors (authorsResourceParameters);
             var authors = Mapper.Map<IEnumerable<AuthorDto>> (authorsFromRepo);
 
             return Ok (authors);
