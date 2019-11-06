@@ -1,10 +1,13 @@
 using System;
 using System.Collections.Generic;
+
 using AutoMapper;
+
 using Library.API.Entities;
 using Library.API.Helpers;
 using Library.API.Models;
 using Library.API.Services;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace Library.API.Controllers
@@ -72,56 +75,56 @@ namespace Library.API.Controllers
         {
             switch (type)
             {
-                case ResourceUriType.PreviousPage:
-                    return _urlHelper.Link ("GetAuthors",
-                        new
-                        {
-                            fields = authorsResourceParameters.Fields,
+            case ResourceUriType.PreviousPage:
+                return _urlHelper.Link ("GetAuthors",
+                    new
+                    {
+                        fields = authorsResourceParameters.Fields,
                             orderBy = authorsResourceParameters.OrderBy,
                             searchQuery = authorsResourceParameters.SearchQuery,
                             genre = authorsResourceParameters.Genre,
                             pageNumber = authorsResourceParameters.PageNumber - 1,
                             pageSize = authorsResourceParameters.PageSize
-                        });
-                case ResourceUriType.NextPage:
-                    return _urlHelper.Link ("GetAuthors",
-                        new
-                        {
-                            fields = authorsResourceParameters.Fields,
+                    });
+            case ResourceUriType.NextPage:
+                return _urlHelper.Link ("GetAuthors",
+                    new
+                    {
+                        fields = authorsResourceParameters.Fields,
                             orderBy = authorsResourceParameters.OrderBy,
                             searchQuery = authorsResourceParameters.SearchQuery,
                             genre = authorsResourceParameters.Genre,
                             pageNumber = authorsResourceParameters.PageNumber + 1,
                             pageSize = authorsResourceParameters.PageSize
-                        });
+                    });
 
-                default:
-                    return _urlHelper.Link ("GetAuthors",
-                        new
-                        {
-                            fields = authorsResourceParameters.Fields,
+            default:
+                return _urlHelper.Link ("GetAuthors",
+                    new
+                    {
+                        fields = authorsResourceParameters.Fields,
                             orderBy = authorsResourceParameters.OrderBy,
                             searchQuery = authorsResourceParameters.SearchQuery,
                             genre = authorsResourceParameters.Genre,
                             pageNumber = authorsResourceParameters.PageNumber,
                             pageSize = authorsResourceParameters.PageSize
-                        });
+                    });
             }
         }
 
         [HttpGet ("{id}", Name = "GetAuthor")]
         public IActionResult GetAuthor (Guid id, [FromQuery] string fields)
         {
-            if (!_typeHelperService.TypeHasProperties<AuthorDto>(fields))
+            if (!_typeHelperService.TypeHasProperties<AuthorDto> (fields))
             {
-                return BadRequest();
+                return BadRequest ();
             }
             var authorFromRepo = _libraryRepo.GetAuthor (id);
 
             if (authorFromRepo == null) return NotFound ();
 
             var author = Mapper.Map<AuthorDto> (authorFromRepo);
-            return Ok (author.ShapeData(fields));
+            return Ok (author.ShapeData (fields));
         }
 
         [HttpPost ()]
