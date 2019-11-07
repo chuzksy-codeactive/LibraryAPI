@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 
 using Newtonsoft.Json.Serialization;
 
@@ -46,11 +47,21 @@ namespace Library.API
                     options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver ();
                 });
 
+            services.AddSwaggerGen (c =>
+            {
+                c.SwaggerDoc ("v1", new OpenApiInfo
+                {
+                    Title = "Library API",
+                        Version = "v1",
+                        Contact = new OpenApiContact () { Name = "Onuchukwu Chika", Email = "chuzksy@yahoo.com" }
+                });
+            });
+
             // register the DbContext on the container, getting the connection string from
             // appSettings (note: use this during development; in a production environment,
             // it's better to store the connection string in an environment variable)
             var connectionString = Configuration["connectionStrings:libraryDBConnectionString"];
-            services.AddDbContext<LibraryContext> (o => o.UseSqlServer ("Data Source=.; Initial Catalog=LibraryDB; User Id=sa; Password=lillyr055y; Persist Security Info=True"));
+            services.AddDbContext<LibraryContext> (o => o.UseSqlServer (connectionString));
 
             // register the repository
             services.AddScoped<ILibraryRepository, LibraryRepository> ();
@@ -81,13 +92,13 @@ namespace Library.API
                     new RateLimitRule ()
                     {
                         Endpoint = "*",
-                        Limit = 10,
+                        Limit = 1000,
                         Period = "5m"
                     },
                     new RateLimitRule ()
                     {
                         Endpoint = "*",
-                        Limit = 2,
+                        Limit = 10,
                         Period = "10s"
                     }
                 };
@@ -149,10 +160,15 @@ namespace Library.API
                 x.CreateMap<BookForUpdateDto, Book> ();
             });
 
-            app.UseIpRateLimiting();    
+            app.UseIpRateLimiting ();
             app.UseResponseCaching ();
             app.UseHttpCacheHeaders ();
             app.UseMvc ();
+            app.UseSwagger ();
+            app.UseSwaggerUI (c =>
+            {
+                c.SwaggerEndpoint ("/swagger/v1/swagger.json", "Library API");
+            });
         }
     }
 }
