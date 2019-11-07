@@ -2,6 +2,19 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v2.0": {
+      "AspNetCoreRateLimit/1.0.5": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Mvc": "1.0.1",
+          "NETStandard.Library": "1.6.0"
+        },
+        "compile": {
+          "lib/netstandard1.6/AspNetCoreRateLimit.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.6/AspNetCoreRateLimit.dll": {}
+        }
+      },
       "AutoMapper/5.2.0": {
         "type": "package",
         "dependencies": {
@@ -4834,6 +4847,19 @@
     }
   },
   "libraries": {
+    "AspNetCoreRateLimit/1.0.5": {
+      "sha512": "4KzD/lLwCChebt2ZmWtgU2pTDeE1WcAFXC/+GgGtHniontZw+4dhUhu5+dYIn9Fpn4rzOqAKx8PYk2X4L35npg==",
+      "type": "package",
+      "path": "aspnetcoreratelimit/1.0.5",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "aspnetcoreratelimit.1.0.5.nupkg.sha512",
+        "aspnetcoreratelimit.nuspec",
+        "lib/net46/AspNetCoreRateLimit.dll",
+        "lib/netstandard1.6/AspNetCoreRateLimit.dll"
+      ]
+    },
     "AutoMapper/5.2.0": {
       "sha512": "ulUMmzFg1vAFMpTyJsplgnC7pOIFlb25dbldHd7J4eroQWjSV4iAoOQ33h1oMjf6mLo3uZ8aRNUN2rgpOeSE1w==",
       "type": "package",
@@ -13222,6 +13248,7 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.0": [
+      "AspNetCoreRateLimit >= 1.0.5",
       "AutoMapper >= 5.2.0",
       "Marvin.Cache.Headers >= 1.1.0",
       "Microsoft.AspNetCore.All >= 2.0.9",
@@ -13269,6 +13296,10 @@
     "frameworks": {
       "netcoreapp2.0": {
         "dependencies": {
+          "AspNetCoreRateLimit": {
+            "target": "Package",
+            "version": "[1.0.5, )"
+          },
           "AutoMapper": {
             "target": "Package",
             "version": "[5.2.0, )"

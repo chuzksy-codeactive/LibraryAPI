@@ -60,8 +60,8 @@ namespace Library.API.Controllers
                 pageSize = authorsFromRepo.PageSize,
                 currentPage = authorsFromRepo.CurrentPage,
                 totalPages = authorsFromRepo.TotalPages,
-                previousPageLink = previousPageLink,
-                nextPageLink = nextPageLink
+                previousPageLink,
+                nextPageLink
             };
 
             Response.Headers.Add ("X-Pagination", Newtonsoft.Json.JsonConvert.SerializeObject (paginationMetadata));

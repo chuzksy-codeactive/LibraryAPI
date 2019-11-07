@@ -39,6 +39,10 @@
       "frameworks": {
         "netcoreapp2.0": {
           "dependencies": {
+            "AspNetCoreRateLimit": {
+              "target": "Package",
+              "version": "[1.0.5, )"
+            },
             "AutoMapper": {
               "target": "Package",
               "version": "[5.2.0, )"

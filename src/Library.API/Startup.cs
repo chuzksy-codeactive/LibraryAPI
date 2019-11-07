@@ -1,4 +1,6 @@
-﻿using Library.API.Entities;
+﻿using AspNetCoreRateLimit;
+
+using Library.API.Entities;
 using Library.API.Helpers;
 using Library.API.Models;
 using Library.API.Services;
@@ -70,7 +72,29 @@ namespace Library.API
                 {
                     validationModelOptions.AddMustRevalidate = true;
                 });
-            services.AddResponseCaching();
+            services.AddResponseCaching ();
+            services.AddMemoryCache ();
+            services.Configure<IpRateLimitOptions> ((options) =>
+            {
+                options.GeneralRules = new System.Collections.Generic.List<RateLimitRule> ()
+                {
+                    new RateLimitRule ()
+                    {
+                        Endpoint = "*",
+                        Limit = 10,
+                        Period = "5m"
+                    },
+                    new RateLimitRule ()
+                    {
+                        Endpoint = "*",
+                        Limit = 2,
+                        Period = "10s"
+                    }
+                };
+            });
+
+            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore> ();
+            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore> ();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -125,6 +149,7 @@ namespace Library.API
                 x.CreateMap<BookForUpdateDto, Book> ();
             });
 
+            app.UseIpRateLimiting();    
             app.UseResponseCaching ();
             app.UseHttpCacheHeaders ();
             app.UseMvc ();

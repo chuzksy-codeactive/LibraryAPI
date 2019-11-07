@@ -24,6 +24,7 @@
     ".NETCoreApp,Version=v2.0": {
       "Library.API/1.0.0": {
         "dependencies": {
+          "AspNetCoreRateLimit": "1.0.5",
           "AutoMapper": "5.2.0",
           "Marvin.Cache.Headers": "1.1.0",
           "Microsoft.AspNetCore.All": "2.0.9",
@@ -36,6 +37,21 @@
         },
         "compile": {
           "Library.API.dll": {}
+        }
+      },
+      "AspNetCoreRateLimit/1.0.5": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Mvc": "2.0.4",
+          "NETStandard.Library": "2.0.0"
+        },
+        "runtime": {
+          "lib/netstandard1.6/AspNetCoreRateLimit.dll": {
+            "assemblyVersion": "1.0.5.0",
+            "fileVersion": "1.0.5.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard1.6/AspNetCoreRateLimit.dll": {}
         }
       },
       "AutoMapper/5.2.0": {
@@ -4350,6 +4366,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "AspNetCoreRateLimit/1.0.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-4KzD/lLwCChebt2ZmWtgU2pTDeE1WcAFXC/+GgGtHniontZw+4dhUhu5+dYIn9Fpn4rzOqAKx8PYk2X4L35npg==",
+      "path": "aspnetcoreratelimit/1.0.5",
+      "hashPath": "aspnetcoreratelimit.1.0.5.nupkg.sha512"
     },
     "AutoMapper/5.2.0": {
       "type": "package",
