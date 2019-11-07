@@ -2,6 +2,7 @@
 using Library.API.Helpers;
 using Library.API.Models;
 using Library.API.Services;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
@@ -14,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+
 using Newtonsoft.Json.Serialization;
 
 namespace Library.API
@@ -32,16 +34,15 @@ namespace Library.API
         public void ConfigureServices (IServiceCollection services)
         {
             services.AddMvc (setupAction =>
-            {
-                setupAction.ReturnHttpNotAcceptable = true;
-                setupAction.OutputFormatters.Add (new XmlDataContractSerializerOutputFormatter ());
-                setupAction.InputFormatters.Add (new XmlDataContractSerializerInputFormatter ());
-            })
-            .AddJsonOptions( options => 
-            {
-                options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-            });
-
+                {
+                    setupAction.ReturnHttpNotAcceptable = true;
+                    setupAction.OutputFormatters.Add (new XmlDataContractSerializerOutputFormatter ());
+                    setupAction.InputFormatters.Add (new XmlDataContractSerializerInputFormatter ());
+                })
+                .AddJsonOptions (options =>
+                {
+                    options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver ();
+                });
 
             // register the DbContext on the container, getting the connection string from
             // appSettings (note: use this during development; in a production environment,
@@ -51,15 +52,25 @@ namespace Library.API
 
             // register the repository
             services.AddScoped<ILibraryRepository, LibraryRepository> ();
-            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-            services.AddScoped<IUrlHelper>(implementationFactory =>
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor> ();
+            services.AddScoped<IUrlHelper> (implementationFactory =>
             {
-                var actionContext = implementationFactory.GetService<IActionContextAccessor>()
-                .ActionContext;
-                return new UrlHelper(actionContext);
+                var actionContext = implementationFactory.GetService<IActionContextAccessor> ()
+                    .ActionContext;
+                return new UrlHelper (actionContext);
             });
-            services.AddTransient<IPropertyMappingService, PropertyMappingService>();
-            services.AddTransient<ITypeHelperService, TypeHelperService>();
+            services.AddTransient<IPropertyMappingService, PropertyMappingService> ();
+            services.AddTransient<ITypeHelperService, TypeHelperService> ();
+
+            services.AddHttpCacheHeaders ((expirationModelOptions) =>
+                {
+                    expirationModelOptions.MaxAge = 600;
+                },
+                (validationModelOptions) =>
+                {
+                    validationModelOptions.AddMustRevalidate = true;
+                });
+            services.AddResponseCaching();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -114,6 +125,8 @@ namespace Library.API
                 x.CreateMap<BookForUpdateDto, Book> ();
             });
 
+            app.UseResponseCaching ();
+            app.UseHttpCacheHeaders ();
             app.UseMvc ();
         }
     }

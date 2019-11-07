@@ -59,6 +59,23 @@
           }
         }
       },
+      "Marvin.Cache.Headers/1.1.0": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNetCore.Http.Abstractions": "1.0.2",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.2",
+          "Microsoft.Extensions.Logging.Abstractions": "1.0.2",
+          "Microsoft.Extensions.Options": "1.0.2",
+          "Microsoft.Net.Http.Headers": "1.0.2",
+          "NETStandard.Library": "1.6.0"
+        },
+        "compile": {
+          "lib/netstandard1.6/Marvin.Cache.Headers.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard1.6/Marvin.Cache.Headers.dll": {}
+        }
+      },
       "Microsoft.ApplicationInsights/2.4.0": {
         "type": "package",
         "dependencies": {
@@ -4852,6 +4869,18 @@
         "runtimes/win-arm/native/libuv.dll",
         "runtimes/win-x64/native/libuv.dll",
         "runtimes/win-x86/native/libuv.dll"
+      ]
+    },
+    "Marvin.Cache.Headers/1.1.0": {
+      "sha512": "xUVGPP9vmFCN3ZrZ327+uY9M2NEGiuQEHKvb6N0bgPwTl/ODMymhleIsK+bIeRmMn37VKy/vXctTNVks/Jg0bw==",
+      "type": "package",
+      "path": "marvin.cache.headers/1.1.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netstandard1.6/Marvin.Cache.Headers.dll",
+        "marvin.cache.headers.1.1.0.nupkg.sha512",
+        "marvin.cache.headers.nuspec"
       ]
     },
     "Microsoft.ApplicationInsights/2.4.0": {
@@ -13194,6 +13223,7 @@
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v2.0": [
       "AutoMapper >= 5.2.0",
+      "Marvin.Cache.Headers >= 1.1.0",
       "Microsoft.AspNetCore.All >= 2.0.9",
       "Microsoft.Extensions.Logging.Debug >= 2.0.2",
       "Microsoft.NETCore.App >= 2.0.0",
@@ -13242,6 +13272,10 @@
           "AutoMapper": {
             "target": "Package",
             "version": "[5.2.0, )"
+          },
+          "Marvin.Cache.Headers": {
+            "target": "Package",
+            "version": "[1.1.0, )"
           },
           "Microsoft.AspNetCore.All": {
             "target": "Package",

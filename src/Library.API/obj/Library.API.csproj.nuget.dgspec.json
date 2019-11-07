@@ -43,6 +43,10 @@
               "target": "Package",
               "version": "[5.2.0, )"
             },
+            "Marvin.Cache.Headers": {
+              "target": "Package",
+              "version": "[1.1.0, )"
+            },
             "Microsoft.AspNetCore.All": {
               "target": "Package",
               "version": "[2.0.9, )"

@@ -25,6 +25,7 @@
       "Library.API/1.0.0": {
         "dependencies": {
           "AutoMapper": "5.2.0",
+          "Marvin.Cache.Headers": "1.1.0",
           "Microsoft.AspNetCore.All": "2.0.9",
           "Microsoft.Extensions.Logging.Debug": "2.0.2",
           "Microsoft.NETCore.App": "2.0.0",
@@ -101,6 +102,25 @@
             "assetType": "native",
             "fileVersion": "0.0.0.0"
           }
+        }
+      },
+      "Marvin.Cache.Headers/1.1.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Http.Abstractions": "2.0.3",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "2.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "2.0.2",
+          "Microsoft.Extensions.Options": "2.0.2",
+          "Microsoft.Net.Http.Headers": "2.0.3",
+          "NETStandard.Library": "2.0.0"
+        },
+        "runtime": {
+          "lib/netstandard1.6/Marvin.Cache.Headers.dll": {
+            "assemblyVersion": "1.1.0.0",
+            "fileVersion": "1.1.0.0"
+          }
+        },
+        "compile": {
+          "lib/netstandard1.6/Marvin.Cache.Headers.dll": {}
         }
       },
       "Microsoft.ApplicationInsights/2.4.0": {
@@ -4344,6 +4364,13 @@
       "sha512": "sha512-GsCf4q+eyaI49rCPlgYxdxa1SQCysXFFdSJWdstrwxytg4+VPYLYrXD4AT2rjHVJ+UF7SSWX9CapWEYaU4ejVQ==",
       "path": "libuv/1.10.0",
       "hashPath": "libuv.1.10.0.nupkg.sha512"
+    },
+    "Marvin.Cache.Headers/1.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-xUVGPP9vmFCN3ZrZ327+uY9M2NEGiuQEHKvb6N0bgPwTl/ODMymhleIsK+bIeRmMn37VKy/vXctTNVks/Jg0bw==",
+      "path": "marvin.cache.headers/1.1.0",
+      "hashPath": "marvin.cache.headers.1.1.0.nupkg.sha512"
     },
     "Microsoft.ApplicationInsights/2.4.0": {
       "type": "package",
